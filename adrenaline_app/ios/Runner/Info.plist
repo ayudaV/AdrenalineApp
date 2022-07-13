@@ -45,5 +45,9 @@
 	<false/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Adrenaline RPG needs permission for the photo library</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Adrenaline RPG needs access to the camera</string>
 </dict>
 </plist>
