@@ -1,15 +1,22 @@
 class User {
   String id;
   String username;
+  String firstName;
+  String lastName;
+  String email;
+  String birthday;
   String imageUrl;
-  String password;
   String role;
 
   //Construtor
-  User(
-      {this.id = "",
-      this.username = "",
-      this.password = "",
-      this.imageUrl = "",
-      this.role = ""});
+  User({
+    this.id = "",
+    this.username = "",
+    this.firstName = "",
+    this.lastName = "",
+    this.email = "",
+    this.birthday = "",
+    this.imageUrl = "",
+    this.role = "",
+  });
 }
