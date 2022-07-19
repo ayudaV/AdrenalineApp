@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 class Dice {
   String type;
   int value = 1;
-  ImageIcon icon = const ImageIcon(AssetImage("assets/images/face.png"));
+  ImageIcon icon = const ImageIcon(AssetImage("assets/images/d4.png"));
 
   //Construtor
   Dice(this.type) {

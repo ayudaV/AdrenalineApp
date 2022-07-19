@@ -1,5 +1,6 @@
 import 'package:adrenaline_app/models/user.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cube/flutter_cube.dart';
 
 ThemeData myThemeData = ThemeData(
   primaryColor: const Color.fromARGB(255, 29, 53, 87),
@@ -11,5 +12,7 @@ ThemeData myThemeData = ThemeData(
 );
 
 String token = "";
+String id = "";
+
 String apiBaseUrl = 'https://adrenaline-rpg-api.herokuapp.com/';
 User? user;

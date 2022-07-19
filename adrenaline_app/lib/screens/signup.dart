@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
-import 'package:path/path.dart';
+import 'package:path/path.dart' as path;
 import 'package:adrenaline_app/global.dart' as global;
+
+import '../models/user.dart';
+import 'mainScreen.dart';
 
 class StatefulSignup extends StatefulWidget {
   const StatefulSignup({Key? key}) : super(key: key);
@@ -187,18 +192,39 @@ class Signup extends State<StatefulSignup> {
     request.fields['email'] = _emailController.text;
     request.fields['birthday'] = _birthdayController.text;
 
-    var stream = http.ByteStream(Stream.castFrom(imageFile.openRead()));
-    // get file length
-    var length = await imageFile.length(); //imageFile is your image file
-
     // multipart that takes file
     if (isImageSelected) {
+      var stream = http.ByteStream(Stream.castFrom(imageFile.openRead()));
+      // get file length
+      var length = await imageFile.length(); //imageFile is your image file
       var multipartFileSign = http.MultipartFile('image', stream, length,
-          filename: basename(imageFile.path),
-          contentType: MediaType('image', extension(imageFile.path)));
+          filename: path.basename(imageFile.path),
+          contentType: MediaType('image', path.extension(imageFile.path)));
       request.files.add(multipartFileSign);
     }
     var res = await request.send();
+    if (res.statusCode == 200) {
+      final response = await http.post(
+        Uri.parse('${global.apiBaseUrl}auth'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'username': _usernameController.text,
+          'password': _passwordController.text,
+        }),
+      );
+      if (response.statusCode == 200) {
+        global.user = User.fromJson(jsonDecode(response.body));
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => StatefulMain(),
+        ));
+      } else {
+        setState(() {
+          _responseText = response.reasonPhrase!;
+        });
+      }
+    }
     return res.reasonPhrase!;
   }
 }

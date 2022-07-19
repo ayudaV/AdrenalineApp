@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:adrenaline_app/screens/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:adrenaline_app/global.dart' as global;
 import 'package:http/http.dart' as http;
 import 'package:adrenaline_app/models/user.dart';
+import 'package:adrenaline_app/screens/mainScreen.dart';
 
 class StatefulLogin extends StatefulWidget {
   const StatefulLogin({Key? key}) : super(key: key);
@@ -49,26 +51,7 @@ class Login extends State<StatefulLogin> {
                 padding: const EdgeInsets.only(left: 50, right: 50, top: 20),
                 child: MaterialButton(
                   onPressed: () {
-                    login().then(
-                      ((value) => setState(
-                            () {
-                              if (value.statusCode == 200) {
-                                var res = json.decode(value.body);
-                                global.token = res["token"];
-                                global.user = User(
-                                    id: res["id"] as String,
-                                    username: res["username"],
-                                    firstName: res["firstName"],
-                                    lastName: res["lastName"],
-                                    email: res["email"],
-                                    birthday: res["birthday"],
-                                    imageUrl: res["image"],
-                                    role: res["role"]);
-                              }
-                              _responseText = value.reasonPhrase!;
-                            },
-                          )),
-                    );
+                    login();
                   },
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(90.0)),
@@ -99,6 +82,19 @@ class Login extends State<StatefulLogin> {
                   ),
                 ),
               ),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => StatefulSignup(),
+                    ));
+                  },
+                  child: const Text(
+                    "Create Account",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 17,
+                    ),
+                  )),
               Text(
                 _responseText,
                 textAlign: TextAlign.center,
@@ -111,8 +107,8 @@ class Login extends State<StatefulLogin> {
     );
   }
 
-  Future<http.Response> login() {
-    return http.post(
+  void login() async {
+    final response = await http.post(
       Uri.parse('${global.apiBaseUrl}auth'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
@@ -122,5 +118,15 @@ class Login extends State<StatefulLogin> {
         'password': _passwordController.text,
       }),
     );
+    if (response.statusCode == 200) {
+      global.user = User.fromJson(jsonDecode(response.body));
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => StatefulMain(),
+      ));
+    } else {
+      setState(() {
+        _responseText = response.reasonPhrase!;
+      });
+    }
   }
 }

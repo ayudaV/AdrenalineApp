@@ -3,6 +3,8 @@
 import 'package:adrenaline_app/components/bottomNav.dart';
 import 'package:adrenaline_app/screens/login.dart';
 import 'package:adrenaline_app/screens/signup.dart';
+import 'package:adrenaline_app/screens/mainScreen.dart';
+
 import 'package:expandable_bottom_bar/expandable_bottom_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
         title: 'Adrenaline RPG',
         theme: ThemeData.dark(),
         home: DefaultBottomBarController(
-          child: const StatefulNav(),
+          child: SafeArea(child: StatefulLogin()),
         ));
   }
 }
